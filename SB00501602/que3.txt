@@ -1,0 +1,22 @@
+
+
+create or replace type Address_Object as object
+(house_no number,
+street varchar2(20),
+city varchar2(20),
+pincode number,
+state varchar2(20));
+
+
+create or replace type AddressTab as varray(5) of Address_Object;
+
+create table Student(student_id number primary key,student_name varchar2(20),student_address AddressTab);
+
+insert into Student values(01,'abc',AddressTab(Address_Object(123,'chanakya','mumbai',5468,'maharashtra'),Address_Object(456,'xyz','vashi',5365,'maharashtra')));
+insert into Student values(02,'abb',AddressTab(Address_Object(196,'wakad','pune',5467,'maharashtra'),Address_Object(455,'xye','hjk',5375,'goa')));
+insert into Student values(03,'acc',AddressTab(Address_Object(178,'der','nagpur',5428,'maharashtra'),Address_Object(416,'xyw','qwei',5365,'bihar')));
+
+select s.student_address.city, s.student_address.pincode, s.student_address.state from  Student s where student_id=01;
+
+
+

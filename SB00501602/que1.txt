@@ -1,0 +1,70 @@
+
+create or replace procedure Update_Salary(eid executive.executive_id%type) as
+invalid_eid exception;
+invalid_sal exception;
+e_sal  executive.executive_salary%type;
+e_role executive.executive_role%type;
+cnt number;
+begin
+select count(executive_id) into cnt from executive where executive_id=eid;
+select executive_salary, executive_role into e_sal,e_role from executive where executive_id=eid;
+if cnt!=0 then
+	if e_sal!=0 then
+		if e_role='MANAGER' then
+       		update executive set executive_salary=executive_salary+executive_salary*0.03 where executive_id=eid;
+   		 else 
+       		update executive set executive_salary=executive_salary+executive_salary*0.02 where executive_id=eid;
+		end if;
+	else
+	raise invalid_sal;
+	end if;
+else raise invalid_eid;
+end if;
+dbms_output.put_line('salary of executive id: '||eid||' successfully updated in table executive');
+exception
+when invalid_eid then
+dbms_output.put_line('executive id doesnot exist');
+when invalid_sal then
+dbms_output.put_line('salary cannot be null');
+end;
+/
+
+execute Update_Salary(29538);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

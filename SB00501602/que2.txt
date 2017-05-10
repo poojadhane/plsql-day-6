@@ -1,0 +1,49 @@
+
+create or replace package pckg_1 as
+procedure Print_Report(h_code hotel.hotel_code%type);
+end;
+/
+
+
+create or replace  package body pckg_1 as
+function Validate_Hotel(h_code hotel.hotel_code%type) return boolean as
+cnt number;
+BEGIN
+select count(*) into cnt from hotel where hotel_code=h_code;
+if cnt=1 then
+return true;
+else
+return false;
+end if;
+END;
+
+
+procedure Print_Report(h_code hotel.hotel_code%type) as 
+invalid_hotelcode exception;
+h_name hotel.hotel_name%type;
+h_addr hotel.hotel_address%type;
+h_city hotel.hotel_city%type;
+
+BEGIN
+	if Validate_Hotel(h_code) then
+	select hotel_name,hotel_address,hotel_city into h_name,h_addr,h_city from hotel where hotel_code=h_code;
+                dbms_output.put_line('hotel code: '||h_code);
+	dbms_output.put_line('hotel name: '||h_name);
+	dbms_output.put_line('hotel address: '||h_addr);
+	dbms_output.put_line('hotel city '||h_city);
+	
+	dbms_output.put_line('executive id       shift start time         shift end time');
+	
+	else
+	raise invalid_hotelcode;
+	end if;
+exception
+when invalid_hotelcode then
+dbms_output.put_line('insert valid hotel code');
+END;
+END;
+/
+
+execute pckg_1.Print_Report('Wovo_ASM');
+
+
